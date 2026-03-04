@@ -137,10 +137,13 @@ If yes: run the appropriate install command for the detected package manager.
 ### Step 8: Update .gitignore
 Append TrustLayer runtime entries if not present:
 ```
-# TrustLayer runtime
+# TrustLayer runtime (per-session, not shared across worktrees)
 .claude/trustlayer/builder-output.md
+.claude/trustlayer/config.json
 .claude/current-task-scope.json
 ```
+
+Note: The hook, settings.json, specs, and workflows should be **committed** so worktrees get them automatically. Only runtime/session files are gitignored.
 
 ### Step 9: Verification — Run /spec-doctor
 After setup, automatically run the doctor checks (see /spec-doctor skill) to verify everything works.

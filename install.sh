@@ -106,8 +106,9 @@ install_project() {
     if ! grep -q "trustlayer" "$TARGET/.gitignore"; then
       cat >> "$TARGET/.gitignore" << 'GITIGNORE'
 
-# TrustLayer runtime files
+# TrustLayer runtime (per-session, not shared across worktrees)
 .claude/trustlayer/builder-output.md
+.claude/trustlayer/config.json
 .claude/current-task-scope.json
 GITIGNORE
       echo "  .gitignore: updated"
