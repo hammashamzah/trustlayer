@@ -96,23 +96,26 @@ You review the table — not test code, not implementation.
 
 ## Installation
 
-Skills and agents install **globally** (once). Hooks, config, and workflows are **per-project**.
+### New computer (one-time)
 
 ```bash
-# Clone
 git clone https://github.com/hammashamzah/trustlayer.git ~/Projects/trustlayer
-
-# Step 1: Global install — skills + agents + templates to ~/.claude/
 bash ~/Projects/trustlayer/install.sh
+```
 
-# Step 2: Per-project init — hook + config + specs dirs + GitHub Actions
-bash ~/Projects/trustlayer/install.sh /path/to/your-project
+Installs skills, agents, and templates globally to `~/.claude/`.
 
-# Step 3: In Claude Code (inside that project) — verify + configure
+### New project
+
+Open Claude Code inside the project and run:
+
+```
 /spec-setup
 ```
 
-`/spec-setup` detects your stack, verifies the hook works, installs dependencies if needed, and runs `/spec-doctor` to confirm everything is healthy.
+That's it. `/spec-setup` handles everything: verifies global install (runs it if missing), copies the hook, registers it in settings.json, copies spec templates, GitHub Actions, detects your stack, and runs `/spec-doctor` to confirm everything works.
+
+You can also do it manually with `bash ~/Projects/trustlayer/install.sh /path/to/project` if you prefer.
 
 ### What goes where
 

@@ -6,7 +6,7 @@ keywords: [setup, install, configure, trustlayer, onboard]
 
 # /spec-setup — Interactive Setup
 
-Full interactive setup that installs TrustLayer, detects your stack, configures hooks, and verifies everything works.
+Full interactive setup that installs TrustLayer into the current project. Handles everything: global install (if needed), project hook, config, spec templates, GitHub Actions, and verification. No need to run install.sh manually — this skill IS the installer.
 
 ## When to Use
 - First time setting up TrustLayer in a project
@@ -66,15 +66,50 @@ Check that agents and skills exist in `~/.claude/`:
 - `~/.claude/agents/spec-builder.md`, `spec-reviewer.md`, `spec-breaker.md`
 - `~/.claude/skills/spec-freeze/SKILL.md` (and all other skills)
 
-If missing, tell user: "Global install not found. Run: bash ~/Projects/trustlayer/install.sh"
+If missing, run the global install automatically:
+```bash
+bash ~/Projects/trustlayer/install.sh
+```
+If `~/Projects/trustlayer` doesn't exist either, tell user: "TrustLayer source not found. Run: git clone https://github.com/hammashamzah/trustlayer.git ~/Projects/trustlayer"
 
-### Step 5: Verify Project Hook
-Check that the hook is set up for this project:
-1. `.claude/hooks/trustlayer-post-edit.sh` exists and is executable
-2. `.claude/settings.json` has the PostToolUse hook registered
+### Step 5: Install Project Hook
+Set up the hook for this project. Do this directly (do NOT tell the user to run install.sh):
 
-If missing, tell user: "Project not initialized. Run: bash ~/Projects/trustlayer/install.sh $(pwd)"
-If hook exists but not registered, offer to add it to settings.json.
+1. Copy hook script:
+```bash
+cp ~/Projects/trustlayer/dotclaude/hooks/trustlayer-post-edit.sh .claude/hooks/
+chmod +x .claude/hooks/trustlayer-post-edit.sh
+```
+
+2. Register hook in `.claude/settings.json`:
+   - If file exists and already has `trustlayer-post-edit` → skip
+   - If file exists but no trustlayer hook → merge this into `.hooks.PostToolUse`:
+     ```json
+     {
+       "matcher": "Edit|Write",
+       "hooks": [{
+         "type": "command",
+         "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/trustlayer-post-edit.sh",
+         "timeout": 30
+       }]
+     }
+     ```
+   - If file doesn't exist → create it with the hook config
+
+### Step 5b: Copy Spec Templates (if specs/ is empty)
+If no `.feature` files exist in `specs/`:
+```bash
+cp ~/Projects/trustlayer/specs-template/*.md specs/
+cp ~/Projects/trustlayer/specs-template/*.feature specs/
+cp ~/Projects/trustlayer/specs-template/evals/* specs/evals/
+```
+
+### Step 5c: Copy GitHub Actions
+If this is a git repo and `.github/workflows/trustlayer-ci.yml` doesn't exist:
+```bash
+mkdir -p .github/workflows
+cp ~/Projects/trustlayer/github/workflows/*.yml .github/workflows/
+```
 
 ### Step 6: Write TrustLayer Config
 Create `.claude/trustlayer/config.json` with detected project info:
@@ -93,21 +128,13 @@ Create `.claude/trustlayer/config.json` with detected project info:
 }
 ```
 
-### Step 7: GitHub Actions (optional)
-Ask: "Install GitHub Actions workflows for CI and preview deploys? (y/n)"
-
-If yes:
-- Create `.github/workflows/` if needed
-- Copy `trustlayer-ci.yml` and `trustlayer-preview.yml`
-- Warn about required secrets: `VERCEL_TOKEN`, `NETLIFY_AUTH_TOKEN` etc.
-
-### Step 8: Install Playwright (if missing)
+### Step 7: Install Playwright (if missing)
 If no e2e framework detected:
 "No E2E framework found. Install Playwright for TrustLayer verification? (recommended)"
 
 If yes: run the appropriate install command for the detected package manager.
 
-### Step 9: Update .gitignore
+### Step 8: Update .gitignore
 Append TrustLayer runtime entries if not present:
 ```
 # TrustLayer runtime
@@ -115,10 +142,10 @@ Append TrustLayer runtime entries if not present:
 .claude/current-task-scope.json
 ```
 
-### Step 10: Verification — Run /spec-doctor
+### Step 9: Verification — Run /spec-doctor
 After setup, automatically run the doctor checks (see /spec-doctor skill) to verify everything works.
 
-### Step 11: Report
+### Step 10: Report
 ```
 TrustLayer setup complete!
 
