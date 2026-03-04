@@ -57,7 +57,7 @@ You review the table — not test code, not implementation.
 | **spec-reviewer** | Haiku | Read-only verification checklist | Sees spec + evals + code. Does NOT see builder reasoning or breaker tests. |
 | **spec-breaker** | Sonnet | Red-team adversarial testing | Sees spec + source code. Does NOT see builder tests or reviewer findings. |
 
-### Skills (11)
+### Skills (13)
 
 | Skill | Description |
 |-------|-------------|
@@ -71,6 +71,8 @@ You review the table — not test code, not implementation.
 | `/spec-break` | Orchestrate breaker agent |
 | `/spec-pipeline` | Full pipeline: build → review + break → merge gate |
 | `/spec-status` | Dashboard of all specs and pipeline state |
+| `/spec-setup` | Interactive setup — install, configure, verify everything works |
+| `/spec-doctor` | Diagnose issues and auto-fix (hooks, agents, config, stale reports) |
 | `/morning` | ClickUp morning check-in with priorities |
 
 ### Hook
@@ -94,24 +96,47 @@ You review the table — not test code, not implementation.
 
 ## Installation
 
+### Option A: Interactive Setup (recommended)
+
 ```bash
 # Clone
 git clone https://github.com/hammashamzah/trustlayer.git ~/Projects/trustlayer
 
-# Install into any project
+# Quick install (copies files)
 bash ~/Projects/trustlayer/install.sh /path/to/your-project
 
-# In Claude Code (inside that project)
+# In Claude Code (inside that project) — interactive setup + verification
+/spec-setup
+```
+
+`/spec-setup` detects your stack, configures hooks, installs dependencies if needed, and runs `/spec-doctor` to verify everything works.
+
+### Option B: Manual Install
+
+```bash
+bash ~/Projects/trustlayer/install.sh /path/to/your-project
+# Then in Claude Code:
 /spec-init
 ```
 
-This copies agents, skills, hooks, templates, and GitHub Actions into your project's `.claude/` directory.
+### Health Check
 
-To remove:
+Run anytime to diagnose and auto-fix issues:
+
+```
+/spec-doctor         # check everything, report issues
+/spec-doctor --fix   # auto-fix everything possible
+```
+
+Doctor checks: directories, agents, skills, hook script, hook registration, hook execution, config validity, git/GitHub, test framework, templates, spec integrity, stale reports.
+
+### Uninstall
 
 ```bash
 bash ~/Projects/trustlayer/uninstall.sh /path/to/your-project
 ```
+
+Specs, tests, and reports are preserved.
 
 ## Usage
 
@@ -186,7 +211,7 @@ trustlayer/
 ├── trustlayer.json
 ├── dotclaude/
 │   ├── agents/          # Builder, Reviewer, Breaker
-│   ├── skills/          # 11 slash commands
+│   ├── skills/          # 13 slash commands
 │   ├── hooks/           # Auto-test hook
 │   └── settings.trustlayer.json
 ├── specs-template/      # Example specs + evals

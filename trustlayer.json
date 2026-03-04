@@ -8,7 +8,7 @@
     "skills": [
       "spec-init", "spec-context", "spec-write", "spec-decompose",
       "spec-freeze", "spec-build", "spec-review", "spec-break",
-      "spec-pipeline", "spec-status"
+      "spec-pipeline", "spec-status", "spec-setup", "spec-doctor"
     ],
     "hooks": ["trustlayer-post-edit"],
     "workflows": ["trustlayer-ci", "trustlayer-preview"]
