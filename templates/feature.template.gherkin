@@ -1,0 +1,22 @@
+@scope(SCOPE)
+@priority(medium)
+Feature: FEATURE_NAME
+
+  As a USER_ROLE
+  I want to ACTION
+  So that BENEFIT
+
+  Background:
+    Given the application is running
+
+  @happy-path
+  Scenario: Successful SCENARIO
+    Given PRECONDITION
+    When ACTION
+    Then EXPECTED_RESULT
+
+  @error-handling
+  Scenario: Failed SCENARIO
+    Given PRECONDITION
+    When INVALID_ACTION
+    Then ERROR_RESULT

@@ -1,0 +1,21 @@
+{
+  "name": "trustlayer",
+  "version": "0.1.0",
+  "description": "Spec-driven development pipeline for Claude Code with layered trust verification",
+  "author": "hammashamzah",
+  "components": {
+    "agents": ["spec-builder", "spec-reviewer", "spec-breaker"],
+    "skills": [
+      "spec-init", "spec-context", "spec-write", "spec-decompose",
+      "spec-freeze", "spec-build", "spec-review", "spec-break",
+      "spec-pipeline", "spec-status"
+    ],
+    "hooks": ["trustlayer-post-edit"],
+    "workflows": ["trustlayer-ci", "trustlayer-preview"]
+  },
+  "models": {
+    "builder": "opus",
+    "reviewer": "haiku",
+    "breaker": "sonnet"
+  }
+}

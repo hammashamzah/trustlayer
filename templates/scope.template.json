@@ -1,0 +1,17 @@
+{
+  "spec_file": "specs/SCOPE.feature",
+  "eval_file": "specs/evals/SCOPE.eval.yaml",
+  "scope": "SCOPE",
+  "allowed_paths": [],
+  "forbidden_paths": [
+    "specs/**",
+    ".claude/reviews/**",
+    ".claude/breaker-reports/**",
+    "tests/red-team/**"
+  ],
+  "test_command": "",
+  "test_command_all": "",
+  "eval_ids": [],
+  "created_at": "",
+  "mode": "explore-freeze"
+}
