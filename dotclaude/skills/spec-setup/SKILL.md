@@ -61,38 +61,22 @@ mkdir -p tests/spec-generated
 mkdir -p tests/red-team
 ```
 
-### Step 4: Copy Agent Definitions
-Read each agent file from the trustlayer source and write to `.claude/agents/`:
-- `spec-builder.md`
-- `spec-reviewer.md`
-- `spec-breaker.md`
+### Step 4: Verify Global Install
+Check that agents and skills exist in `~/.claude/`:
+- `~/.claude/agents/spec-builder.md`, `spec-reviewer.md`, `spec-breaker.md`
+- `~/.claude/skills/spec-freeze/SKILL.md` (and all other skills)
 
-### Step 5: Copy Skills
-Copy all skill directories from trustlayer source to `.claude/skills/`.
+If missing, tell user: "Global install not found. Run: bash ~/Projects/trustlayer/install.sh"
 
-### Step 6: Install Hook
-1. Copy `trustlayer-post-edit.sh` to `.claude/hooks/`
-2. Make it executable
-3. Read existing `.claude/settings.json` (or `.claude/settings.local.json`)
-4. Check if PostToolUse hook for trustlayer already exists
-5. If not, merge the hook config:
-   ```json
-   {
-     "hooks": {
-       "PostToolUse": [{
-         "matcher": "Edit|Write",
-         "hooks": [{
-           "type": "command",
-           "command": "bash $CLAUDE_PROJECT_DIR/.claude/hooks/trustlayer-post-edit.sh",
-           "timeout": 30
-         }]
-       }]
-     }
-   }
-   ```
-6. Write back the merged settings
+### Step 5: Verify Project Hook
+Check that the hook is set up for this project:
+1. `.claude/hooks/trustlayer-post-edit.sh` exists and is executable
+2. `.claude/settings.json` has the PostToolUse hook registered
 
-### Step 7: Write TrustLayer Config
+If missing, tell user: "Project not initialized. Run: bash ~/Projects/trustlayer/install.sh $(pwd)"
+If hook exists but not registered, offer to add it to settings.json.
+
+### Step 6: Write TrustLayer Config
 Create `.claude/trustlayer/config.json` with detected project info:
 ```json
 {
@@ -109,12 +93,7 @@ Create `.claude/trustlayer/config.json` with detected project info:
 }
 ```
 
-### Step 8: Copy Templates & Examples
-- Copy spec templates to `specs/`
-- Copy eval templates to `specs/evals/`
-- Copy report templates to `.claude/trustlayer/templates/`
-
-### Step 9: GitHub Actions (optional)
+### Step 7: GitHub Actions (optional)
 Ask: "Install GitHub Actions workflows for CI and preview deploys? (y/n)"
 
 If yes:
@@ -122,13 +101,13 @@ If yes:
 - Copy `trustlayer-ci.yml` and `trustlayer-preview.yml`
 - Warn about required secrets: `VERCEL_TOKEN`, `NETLIFY_AUTH_TOKEN` etc.
 
-### Step 10: Install Playwright (if missing)
+### Step 8: Install Playwright (if missing)
 If no e2e framework detected:
 "No E2E framework found. Install Playwright for TrustLayer verification? (recommended)"
 
 If yes: run the appropriate install command for the detected package manager.
 
-### Step 11: Update .gitignore
+### Step 9: Update .gitignore
 Append TrustLayer runtime entries if not present:
 ```
 # TrustLayer runtime
@@ -136,10 +115,10 @@ Append TrustLayer runtime entries if not present:
 .claude/current-task-scope.json
 ```
 
-### Step 12: Verification — Run /spec-doctor
+### Step 10: Verification — Run /spec-doctor
 After setup, automatically run the doctor checks (see /spec-doctor skill) to verify everything works.
 
-### Step 13: Report
+### Step 11: Report
 ```
 TrustLayer setup complete!
 

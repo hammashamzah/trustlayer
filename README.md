@@ -96,28 +96,36 @@ You review the table — not test code, not implementation.
 
 ## Installation
 
-### Option A: Interactive Setup (recommended)
+Skills and agents install **globally** (once). Hooks, config, and workflows are **per-project**.
 
 ```bash
 # Clone
 git clone https://github.com/hammashamzah/trustlayer.git ~/Projects/trustlayer
 
-# Quick install (copies files)
+# Step 1: Global install — skills + agents + templates to ~/.claude/
+bash ~/Projects/trustlayer/install.sh
+
+# Step 2: Per-project init — hook + config + specs dirs + GitHub Actions
 bash ~/Projects/trustlayer/install.sh /path/to/your-project
 
-# In Claude Code (inside that project) — interactive setup + verification
+# Step 3: In Claude Code (inside that project) — verify + configure
 /spec-setup
 ```
 
-`/spec-setup` detects your stack, configures hooks, installs dependencies if needed, and runs `/spec-doctor` to verify everything works.
+`/spec-setup` detects your stack, verifies the hook works, installs dependencies if needed, and runs `/spec-doctor` to confirm everything is healthy.
 
-### Option B: Manual Install
+### What goes where
 
-```bash
-bash ~/Projects/trustlayer/install.sh /path/to/your-project
-# Then in Claude Code:
-/spec-init
-```
+| Location | What | Why |
+|----------|------|-----|
+| `~/.claude/skills/` | All 13 skills | Work in any project |
+| `~/.claude/agents/` | Builder, Reviewer, Breaker | Work in any project |
+| `~/.claude/trustlayer/templates/` | Report + config templates | Shared reference |
+| `<project>/.claude/hooks/` | `trustlayer-post-edit.sh` | Reads project-specific scope file |
+| `<project>/.claude/settings.json` | Hook registration | Project-specific hook config |
+| `<project>/.claude/trustlayer/` | Config, builder output | Project-specific runtime |
+| `<project>/specs/` | Gherkin + evals | Project-specific specs |
+| `<project>/.github/workflows/` | CI + Preview deploy | Project-specific CI |
 
 ### Health Check
 
@@ -128,15 +136,16 @@ Run anytime to diagnose and auto-fix issues:
 /spec-doctor --fix   # auto-fix everything possible
 ```
 
-Doctor checks: directories, agents, skills, hook script, hook registration, hook execution, config validity, git/GitHub, test framework, templates, spec integrity, stale reports.
+12-point check: directories, agents, skills, hook script, hook registration, hook execution test, config validity, git/GitHub, test framework, templates, spec integrity, stale reports.
 
 ### Uninstall
 
 ```bash
-bash ~/Projects/trustlayer/uninstall.sh /path/to/your-project
+bash ~/Projects/trustlayer/uninstall.sh              # remove global (skills, agents)
+bash ~/Projects/trustlayer/uninstall.sh /path/to/app  # remove from project (hook, config)
 ```
 
-Specs, tests, and reports are preserved.
+Specs, tests, reviews, and breaker reports are always preserved.
 
 ## Usage
 
